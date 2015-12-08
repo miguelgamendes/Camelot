@@ -4,19 +4,54 @@ class Board
 */
 	instance variables
 		private board : seq of seq of char := [];
-		private column : seq of char := [];
 		
 	operations
-		public init: () ==> ()
+		public init : () ==> ()
 		init() == (
+			dcl auxLine : seq of char := [];
 			for counter = 0 to 11 do (
-				column := column ^ [' ']
+				auxLine := auxLine ^ [' ']
 			);
 			for counter = 0 to 15 do (
-				board := board ^ [column]
+				board := board ^ [auxLine]
 			);
-			IO`print(board)
 		);
-
+		
+		public changeElement : int * int * char ==> ()
+		changeElement(x, y, newElem) == (
+			dcl auxBoard : seq of seq of char := [];
+			dcl auxPreBoard : seq of seq of char := [];
+			dcl auxPostBoard : seq of seq of char := board;
+			dcl auxLine : seq of char := [];
+			dcl auxPreLine : seq of char := [];
+			dcl auxPostLine : seq of char := [];
+			
+			-- find Y
+			for counter = 0 to y do (
+				if counter <> 0 then
+					auxPreBoard := auxPreBoard ^ [hd auxBoard];
+				auxBoard := [hd auxPostBoard];
+				auxPostBoard := tl auxPostBoard;
+			);
+			
+			-- find X
+			auxPostLine := hd auxBoard;
+			for counter = 0 to x do (
+				if counter <> 0 then
+					auxPreLine := auxPreLine ^ [hd auxLine];
+				auxLine := [hd auxPostLine];
+				auxPostLine := tl auxPostLine;
+			);
+			
+			-- rebuild line, with new element
+			auxLine := auxPreLine ^ [newElem];
+			auxLine := auxLine ^ auxPostLine;
+			
+			--rebuild board, with new line
+			auxBoard := auxPreBoard ^ [auxLine];
+			auxBoard := auxBoard ^ auxPostBoard;
+			
+			board := auxBoard;
+		);
 
 end Board
