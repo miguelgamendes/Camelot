@@ -1,0 +1,16 @@
+class Board
+/*
+	Data structure that contains the entire game board
+*/
+	instance variables
+		private board : seq of seq of char := [];
+		
+	operations
+		public init: () ==> ()
+		init() ==
+			for counter = 0 to 11 do
+				for counter2 = 0 to 15 do
+					
+
+
+end Board

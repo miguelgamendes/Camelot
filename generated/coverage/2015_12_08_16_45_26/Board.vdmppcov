@@ -1,0 +1,9 @@
+class Board
+/*
+	Data structure that contains the entire game board
+*/
+	instance variables
+		private board : seq of seq of char := [];
+
+
+end Board
