@@ -273,34 +273,64 @@ class Board
 			return -1;
 		);
 		
-		public move : seq of char * int * int * int * int ==> bool
+		public move : seq of char * int * int * int * int ==> seq of char
 		move(color, x1, y1, x2, y2) == (
 			dcl moveDist : int := distance(x1, y1, x2, y2);
+			dcl moveCondition : seq of char;
 			
 			-- check for valid distances
 			if moveDist = -1 then
-				return false;
+				moveCondition := "invalid";
 				
 			-- check for valid piece
 			if color = "white" and (getPieceValue(x1, y1) = 'K' or getPieceValue(x1, y1) = 'P') then
-				return false;
+				moveCondition := "invalid";
 			if color = "black" and (getPieceValue(x1, y1) = 'k' or getPieceValue(x1, y1) = 'p') then
-				return false;
+				moveCondition := "invalid";
 				
 			-- check for empty destination
 			if getPieceValue(x2, y2) <> ' ' then (
 				IO`println("Invalid destination =[");
-				return false;
+				moveCondition := "invalid";
 			);
+			
+			-- check for canter friendly piece presence
+			if moveDist = 2 then (
+				dcl canterPiecePosX : int := x1;
+				dcl canterPiecePosY : int := y1;
+				if abs(x2 - x1) = 2 then
+					canterPiecePosX := (x2 + x1) / 2;
+				if abs(y2 - y1) = 2 then
+					canterPiecePosY := (y2 + y1) / 2;
+				
+				if color = "white" then (
+					if (getPieceValue(canterPiecePosX, canterPiecePosY) = 'K' or getPieceValue(canterPiecePosX, canterPiecePosY) = 'P') then
+						moveCondition := "jump";
+					if (getPieceValue(canterPiecePosX, canterPiecePosY) = 'k' or getPieceValue(canterPiecePosX, canterPiecePosY) = 'p') then
+						moveCondition := "canter";
+				);
+				if color = "black" then (
+					if (getPieceValue(canterPiecePosX, canterPiecePosY) = 'k' or getPieceValue(canterPiecePosX, canterPiecePosY) = 'p') then
+						moveCondition := "jump";
+					if (getPieceValue(canterPiecePosX, canterPiecePosY) = 'K' or getPieceValue(canterPiecePosX, canterPiecePosY) = 'P') then
+						moveCondition := "canter";
+				);
+				
+			);
+			
+			if moveDist = 1 then
+				moveCondition := "plain";
 				
 			-- here we can proceed with the move
-			movePiece(x1, y1, x2, y2);
+			if moveCondition <> "invalid" then (
+				movePiece(x1, y1, x2, y2);
 			
-			-- reset board, and update display according to new piece positions
-			init();
-			updatePieces();
-			
-			return true;
+				-- reset board, and update display according to new piece positions
+				init();
+				updatePieces();
+			);
+				
+			return moveCondition;
 		);
 
 end Board
