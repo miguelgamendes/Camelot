@@ -46,6 +46,12 @@
 class Board
 /*
 	Data structure that contains the entire game board
+	
+	k - white knight
+	p - white pawn
+	
+	K - black knight
+	P - black pawn
 */
 	instance variables
 		private board : seq of seq of char := [];
@@ -83,6 +89,42 @@ class Board
 				board := board ^ [auxLine];
 				auxLine := []; -- reset auxLine for next iteration
 			);
+			
+			-- piece placement
+			
+			-- black pieces
+			
+			changeElement(2,5,'K');
+			changeElement(3,5,'P');
+			changeElement(4,5,'P');
+			changeElement(5,5,'P');
+			changeElement(6,5,'P');
+			changeElement(7,5,'P');
+			changeElement(8,5,'P');
+			changeElement(9,5,'K');
+			
+			changeElement(3,6,'K');
+			changeElement(4,6,'P');
+			changeElement(5,6,'P');
+			changeElement(6,6,'P');
+			changeElement(7,6,'P');
+			changeElement(8,6,'K');
+			
+			changeElement(3,9,'k');
+			changeElement(4,9,'p');
+			changeElement(5,9,'p');
+			changeElement(6,9,'p');
+			changeElement(7,9,'p');
+			changeElement(8,9,'k');
+			
+			changeElement(2,10,'k');
+			changeElement(3,10,'p');
+			changeElement(4,10,'p');
+			changeElement(5,10,'p');
+			changeElement(6,10,'p');
+			changeElement(7,10,'p');
+			changeElement(8,10,'p');
+			changeElement(9,10,'k');
 		);
 		
 		public changeElement : int * int * char ==> ()
