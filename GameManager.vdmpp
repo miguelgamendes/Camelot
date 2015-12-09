@@ -5,5 +5,13 @@ class GameManager
 
 	instance variables
 		private board : Board := new Board()
+		
+	operations
+		public run : () ==> ()
+		run() == (
+			board.begin();
+			
+			board.print();
+		);
 
 end GameManager
