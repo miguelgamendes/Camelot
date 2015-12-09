@@ -1,0 +1,9 @@
+class GameManager
+/*
+	Data structure responsible for managing the game
+*/
+
+	instance variables
+		private board : Board := new Board()
+
+end GameManager

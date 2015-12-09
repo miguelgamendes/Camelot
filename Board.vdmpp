@@ -64,6 +64,11 @@ class Board
 	operations
 		public Board : () ==> Board
 		Board() == (
+			init();
+		);
+		
+		public init : () ==> ()
+		init() == (
 			dcl auxLine : seq of char := [];
 			
 			board := [];
@@ -92,6 +97,11 @@ class Board
 				board := board ^ [auxLine];
 				auxLine := []; -- reset auxLine for next iteration
 			);
+		);
+		
+		public begin : () ==> ()
+		begin() == (
+			init();
 			
 			-- piece placement
 			
