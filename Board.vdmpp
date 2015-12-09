@@ -361,5 +361,15 @@ class Board
 				
 			return moveCondition;
 		);
+		
+		public endCondition : () ==> seq of char
+		endCondition() == (
+			if ((getPieceValue(5, 0) = 'k' or getPieceValue(5, 0) = 'p') and (getPieceValue(6, 0) = 'k' or getPieceValue(6, 0) = 'p')) then
+				return "white";
+			if ((getPieceValue(5, 15) = 'K' or getPieceValue(5, 15) = 'P') and (getPieceValue(6, 15) = 'K' or getPieceValue(6, 15) = 'P')) then
+				return "black";
+				
+			return "false";
+		);
 
 end Board
