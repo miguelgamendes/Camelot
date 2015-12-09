@@ -27,6 +27,21 @@ class Piece
 				else
 					piece := 'P';
 			)
-		)
+		);
+		
+		public getX : () ==> int
+		getX() == (
+			return x;
+		);
+		
+		public getY : () ==> int
+		getY() == (
+			return y;
+		);
+		
+		public getPiece : () ==> char
+		getPiece() == (
+			return piece;
+		);
 
 end Piece

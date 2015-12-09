@@ -55,6 +55,7 @@ class Board
 */
 	instance variables
 		private board : seq of seq of char := [];
+		private pieces : seq of Piece := [];
 		
 	values
 		X = 11;
@@ -96,37 +97,41 @@ class Board
 			
 			-- black pieces
 			
-			changeElement(2,5,'K');
-			changeElement(3,5,'P');
-			changeElement(4,5,'P');
-			changeElement(5,5,'P');
-			changeElement(6,5,'P');
-			changeElement(7,5,'P');
-			changeElement(8,5,'P');
-			changeElement(9,5,'K');
+			addPiece(2,5,"knight", "black");
+			addPiece(3,5,"piece", "black");
+			addPiece(4,5,"piece", "black");
+			addPiece(5,5,"piece", "black");
+			addPiece(6,5,"piece", "black");
+			addPiece(7,5,"piece", "black");
+			addPiece(8,5,"piece", "black");
+			addPiece(9,5,"knight", "black");
 			
-			changeElement(3,6,'K');
-			changeElement(4,6,'P');
-			changeElement(5,6,'P');
-			changeElement(6,6,'P');
-			changeElement(7,6,'P');
-			changeElement(8,6,'K');
+			addPiece(3,6,"knight", "black");
+			addPiece(4,6,"piece", "black");
+			addPiece(5,6,"piece", "black");
+			addPiece(6,6,"piece", "black");
+			addPiece(7,6,"piece", "black");
+			addPiece(8,6,"knight", "black");
 			
-			changeElement(3,9,'k');
-			changeElement(4,9,'p');
-			changeElement(5,9,'p');
-			changeElement(6,9,'p');
-			changeElement(7,9,'p');
-			changeElement(8,9,'k');
+			-- white pieces
 			
-			changeElement(2,10,'k');
-			changeElement(3,10,'p');
-			changeElement(4,10,'p');
-			changeElement(5,10,'p');
-			changeElement(6,10,'p');
-			changeElement(7,10,'p');
-			changeElement(8,10,'p');
-			changeElement(9,10,'k');
+			addPiece(3,9,"knight","white");
+			addPiece(4,9,"piece","white");
+			addPiece(5,9,"piece","white");
+			addPiece(6,9,"piece","white");
+			addPiece(7,9,"piece","white");
+			addPiece(8,9,"knight","white");
+			
+			addPiece(2,10,"knight","white");
+			addPiece(3,10,"piece","white");
+			addPiece(4,10,"piece","white");
+			addPiece(5,10,"piece","white");
+			addPiece(6,10,"piece","white");
+			addPiece(7,10,"piece","white");
+			addPiece(8,10,"piece","white");
+			addPiece(9,10,"knight","white");
+			
+			updatePieces();
 		);
 		
 		public print : () ==> ()
@@ -197,6 +202,19 @@ class Board
 			);
 			
 			return finalElem;
+		);
+		
+		public addPiece : int * int * seq of char * seq of char ==> ()
+		addPiece(x, y, type, color) == (
+			dcl newPiece : Piece := new Piece(x, y, type, color);
+			pieces := pieces ^ [newPiece];
+		);
+		
+		public updatePieces : () ==> ()
+		updatePieces() == (
+			for piece in pieces do (
+				changeElement(piece.getX(), piece.getY(), piece.getPiece());
+			);
 		);
 
 end Board
