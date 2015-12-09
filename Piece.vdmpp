@@ -1,0 +1,32 @@
+class Piece
+/*
+	Data structure that contains a piece's information	
+*/
+
+	instance variables
+		private x : int := 0;
+		private y : int := 0;
+		public piece : char;
+			
+	operations
+		public Piece : int * int * seq of char * seq of char ==> Piece
+		Piece(posX, posY, type, color) == (
+			x := posX;
+			y := posY;
+			
+			if(color = "white") then (
+				if(type = "knight") then
+					piece := 'k'
+				else
+					piece := 'p';
+			);
+			
+			if(color = "black") then (
+				if(type = "knight") then
+					piece := 'K'
+				else
+					piece := 'P';
+			)
+		)
+
+end Piece

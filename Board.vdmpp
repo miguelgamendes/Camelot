@@ -61,8 +61,8 @@ class Board
 		Y = 15;
 		
 	operations
-		public init : () ==> ()
-		init() == (
+		public Board : () ==> Board
+		Board() == (
 			dcl auxLine : seq of char := [];
 			
 			board := [];
