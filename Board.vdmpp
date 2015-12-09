@@ -220,6 +220,23 @@ class Board
 			pieces := pieces ^ [newPiece];
 		);
 		
+		public removePiece : int * int ==> ()
+		removePiece(x, y) == (
+			dcl auxPieces : seq of Piece := [];
+			dcl auxPieces2 : seq of Piece := pieces;
+			
+			for piece in pieces do (
+				if piece.getX() = x and piece.getY() = y then (
+					auxPieces2 := tl auxPieces2;
+				) else (
+					auxPieces := auxPieces ^ [hd auxPieces2];
+					auxPieces2 := tl auxPieces2;
+				)
+			);
+			
+			pieces := auxPieces;
+		);
+		
 		public getPieceValue : int * int ==> char
 		getPieceValue(x, y) == (
 			for piece in pieces do (
@@ -278,6 +295,15 @@ class Board
 			dcl moveDist : int := distance(x1, y1, x2, y2);
 			dcl moveCondition : seq of char;
 			
+			dcl canterPiecePosX : int := x1;
+			dcl canterPiecePosY : int := y1;
+			
+			-- check if valid piece selected
+			if getPieceValue(x1, y1) = ' ' or getPieceValue(x1, y1) = '#' then (
+				moveCondition := "invalid";
+				return moveCondition;
+			);
+			
 			-- check for valid distances
 			if moveDist = -1 then
 				moveCondition := "invalid";
@@ -296,8 +322,6 @@ class Board
 			
 			-- check for canter friendly piece presence
 			if moveDist = 2 then (
-				dcl canterPiecePosX : int := x1;
-				dcl canterPiecePosY : int := y1;
 				if abs(x2 - x1) = 2 then
 					canterPiecePosX := (x2 + x1) / 2;
 				if abs(y2 - y1) = 2 then
@@ -320,6 +344,11 @@ class Board
 			
 			if moveDist = 1 then
 				moveCondition := "plain";
+				
+			-- eliminate piece in case of a jump move
+			if moveCondition = "jump" then (
+				removePiece(canterPiecePosX, canterPiecePosY);
+			);
 				
 			-- here we can proceed with the move
 			if moveCondition <> "invalid" then (
