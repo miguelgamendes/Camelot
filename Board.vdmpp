@@ -5,14 +5,18 @@ class Board
 	instance variables
 		private board : seq of seq of char := [];
 		
+	values
+		X = 11;
+		Y = 15;
+		
 	operations
 		public init : () ==> ()
 		init() == (
 			dcl auxLine : seq of char := [];
-			for counter = 0 to 11 do (
+			for counter = 0 to X do (
 				auxLine := auxLine ^ [' ']
 			);
-			for counter = 0 to 15 do (
+			for counter = 0 to Y do (
 				board := board ^ [auxLine]
 			);
 		);
@@ -53,5 +57,19 @@ class Board
 			
 			board := auxBoard;
 		);
+		
+		public print : () ==> ()
+		print() == (
+			dcl auxBoard : seq of seq of char := board;
+			dcl auxLine : seq of char := [];
+			
+			IO`print("\n");
+			for counter = 0 to Y do (
+				auxLine := hd auxBoard;
+				auxBoard := tl auxBoard;
+				IO`print(auxLine);
+				IO`print("\n");
+			)
+		)
 
 end Board
