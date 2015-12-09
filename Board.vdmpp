@@ -65,6 +65,8 @@ class Board
 		init() == (
 			dcl auxLine : seq of char := [];
 			
+			board := [];
+			
 			for counter = 0 to Y do (
 				for counter2 = 0 to X do (
 					-- corner cases
@@ -127,6 +129,20 @@ class Board
 			changeElement(9,10,'k');
 		);
 		
+		public print : () ==> ()
+		print() == (
+			dcl auxBoard : seq of seq of char := board;
+			dcl auxLine : seq of char := [];
+			
+			IO`print("\n"); -- this is necessary for proper console output
+			for counter = 0 to Y do (
+				auxLine := hd auxBoard;
+				auxBoard := tl auxBoard;
+				IO`print(auxLine);
+				IO`print("\n");
+			)
+		);
+		
 		public changeElement : int * int * char ==> ()
 		changeElement(x, y, newElem) == (
 			dcl auxBoard : seq of seq of char := [];
@@ -164,18 +180,23 @@ class Board
 			board := auxBoard;
 		);
 		
-		public print : () ==> ()
-		print() == (
-			dcl auxBoard : seq of seq of char := board;
+		public getElement : int * int ==> char
+		getElement(x, y) == (
+			dcl finalElem : char;
 			dcl auxLine : seq of char := [];
-			
-			IO`print("\n"); -- this is necessary for proper console output
-			for counter = 0 to Y do (
+			dcl auxBoard : seq of seq of char := board;
+		
+			for counter = 0 to y do (
 				auxLine := hd auxBoard;
 				auxBoard := tl auxBoard;
-				IO`print(auxLine);
-				IO`print("\n");
-			)
-		)
+			);
+			
+			for counter = 0 to x do (
+				finalElem := hd auxLine;
+				auxLine := tl auxLine;
+			);
+			
+			return finalElem;
+		);
 
 end Board
