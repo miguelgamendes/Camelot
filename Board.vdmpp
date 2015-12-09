@@ -13,11 +13,30 @@ class Board
 		public init : () ==> ()
 		init() == (
 			dcl auxLine : seq of char := [];
-			for counter = 0 to X do (
-				auxLine := auxLine ^ [' ']
-			);
+			
 			for counter = 0 to Y do (
-				board := board ^ [auxLine]
+				for counter2 = 0 to X do (
+					-- corner cases
+					if counter + counter2 <= 2 then
+						auxLine := auxLine ^ ['#'];
+					if counter2 - counter >= 9 then
+						auxLine := auxLine ^ ['#'];
+					if counter - counter2 >= 13 then
+						auxLine := auxLine ^ ['#'];
+					if counter + counter2 >= 24 then
+						auxLine := auxLine ^ ['#'];
+						
+					-- additional cases
+					if counter = 0 and (counter2 = 3 or counter2 = 4 or counter2 = 7 or counter2 = 8) then
+						auxLine := auxLine ^ ['#'];
+					if counter = Y and (counter2 = 3 or counter2 = 4 or counter2 = 7 or counter2 = 8) then
+						auxLine := auxLine ^ ['#'];
+					
+					if len auxLine = counter2 then
+						auxLine := auxLine ^ [' '];
+				);
+				board := board ^ [auxLine];
+				auxLine := []; -- reset auxLine for next iteration
 			);
 		);
 		
