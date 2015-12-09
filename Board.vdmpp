@@ -220,11 +220,87 @@ class Board
 			pieces := pieces ^ [newPiece];
 		);
 		
+		public getPieceValue : int * int ==> char
+		getPieceValue(x, y) == (
+			for piece in pieces do (
+				if piece.getX() = x and piece.getY() = y then
+					return piece.getPiece();
+			);
+			
+			return ' ';
+		);
+		
+		public movePiece : int * int * int * int ==> ()
+		movePiece(x1, y1, x2, y2) == (
+			for piece in pieces do (
+				if piece.getX() = x1 and piece.getY() = y1 then
+					piece.move(x2, y2);
+			);
+		);
+		
 		public updatePieces : () ==> ()
 		updatePieces() == (
 			for piece in pieces do (
 				changeElement(piece.getX(), piece.getY(), piece.getPiece());
 			);
+		);
+		
+		public distance : int * int * int * int ==> int
+		distance(x1, y1, x2, y2) == (
+			-- horizontal distance
+			if abs(x2 - x1) = 1 and abs(y2 - y1) = 0 then
+				return 1;
+				
+			-- vertical distance
+			if abs(x2 - x1) = 0 and abs(y2 - y1) = 1 then
+				return 1;
+				
+			-- diagonal distance
+			if abs(x2 - x1) = 1 and abs(y2 - y1) = 1 then
+				return 1;
+			if abs(x2 - x1) = 2 then (
+				if abs(y2 - y1) = 0 then
+					return 2;
+				if abs(y2 - y1) = 2 then
+					return 2;
+			);
+			if abs(y2 - y1) = 2 then (
+				if abs(x2 - x1) = 0 then
+					return 2;
+			);
+			
+			-- last case scenario, return invalid
+			return -1;
+		);
+		
+		public move : seq of char * int * int * int * int ==> bool
+		move(color, x1, y1, x2, y2) == (
+			dcl moveDist : int := distance(x1, y1, x2, y2);
+			
+			-- check for valid distances
+			if moveDist = -1 then
+				return false;
+				
+			-- check for valid piece
+			if color = "white" and (getPieceValue(x1, y1) = 'K' or getPieceValue(x1, y1) = 'P') then
+				return false;
+			if color = "black" and (getPieceValue(x1, y1) = 'k' or getPieceValue(x1, y1) = 'p') then
+				return false;
+				
+			-- check for empty destination
+			if getPieceValue(x2, y2) <> ' ' then (
+				IO`println("Invalid destination =[");
+				return false;
+			);
+				
+			-- here we can proceed with the move
+			movePiece(x1, y1, x2, y2);
+			
+			-- reset board, and update display according to new piece positions
+			init();
+			updatePieces();
+			
+			return true;
 		);
 
 end Board

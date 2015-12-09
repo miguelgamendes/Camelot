@@ -43,5 +43,11 @@ class Piece
 		getPiece() == (
 			return piece;
 		);
+		
+		public move : int * int ==> ()
+		move(posX, posY) == (
+			x := posX;
+			y := posY;
+		);
 
 end Piece
