@@ -8,8 +8,15 @@ class TestGame is subclass of Testalot
 	public test : () ==> ()
 	test() == (
 		testBoard();
+		testPiece();
+		testPieceMove();
 		testPieceAddition();
+		testPieceRemoval();
 		testBoardInit();
+		testBoardPieceMove();
+		testPlainMove();
+		testCanterMove();
+		testJumpMove();
 	);
 	
 	public testBoard : () ==> ()
@@ -47,6 +54,39 @@ class TestGame is subclass of Testalot
 		board.print();
 	);
 	
+	public testPiece : () ==> ()
+	testPiece() == (
+		dcl piece : Piece := new Piece(1, 2, "pawn", "black");
+		dcl piece2 : Piece := new Piece(2, 2, "pawn", "white");
+		dcl piece3 : Piece := new Piece(3, 4, "knight", "black");
+		dcl piece4 : Piece := new Piece(4, 4, "knight", "white");
+		
+		assertEqual(1, piece.getX());
+		assertEqual(2, piece.getY());
+		assertEqual('P', piece.getPiece());
+		
+		assertEqual(2, piece2.getX());
+		assertEqual(2, piece2.getY());
+		assertEqual('p', piece2.getPiece());
+		
+		assertEqual(3, piece3.getX());
+		assertEqual(4, piece3.getY());
+		assertEqual('K', piece3.getPiece());
+		
+		assertEqual(4, piece4.getX());
+		assertEqual(4, piece4.getY());
+		assertEqual('k', piece4.getPiece());
+	);
+	
+	public testPieceMove : () ==> ()
+	testPieceMove() == (
+		dcl piece : Piece := new Piece(5, 5, "pawn", "white");
+		
+		piece.move(10, 5);
+		assertEqual(10, piece.getX());
+		assertEqual(5, piece.getY());
+	);
+	
 	public testPieceAddition : () ==> ()
 	testPieceAddition() == (
 		dcl board : Board := new Board();
@@ -71,10 +111,22 @@ class TestGame is subclass of Testalot
 		board.print();
 	);
 	
+	public testPieceRemoval : () ==> ()
+	testPieceRemoval() == (
+		dcl board : Board := new Board();
+		
+		board.addPiece(5, 5, "pawn", "white");
+		assertEqual('p', board.getPieceValue(5, 5));
+		board.removePiece(5, 5);
+		assertEqual(' ', board.getPieceValue(5, 5));
+		
+		board.updatePieces();
+		board.print();
+	);
+	
 	public testBoardInit : () ==> ()
 	testBoardInit() == (
 		dcl board : Board := new Board();
-		board.init();
 		board.begin();
 		
 		assertEqual('K', board.getPieceValue(2, 5));
@@ -108,6 +160,122 @@ class TestGame is subclass of Testalot
 		assertEqual('p', board.getPieceValue(7, 10));
 		assertEqual('p', board.getPieceValue(8, 10));
 		assertEqual('k', board.getPieceValue(9, 10));
+		
+		board.updatePieces();
+		board.print();
+	);
+	
+	public testBoardPieceMove : () ==> ()
+	testBoardPieceMove() == (
+		dcl board : Board := new Board();
+		
+		board.addPiece(3, 3, "pawn", "white");
+		board.addPiece(5, 3, "knight", "black");
+		board.addPiece(4, 5, "knight", "white");
+		
+		board.movePiece(3, 3, 5, 5);
+		assertEqual('p', board.getPieceValue(5, 5));
+		
+		board.movePiece(5, 3, 3, 5);
+		assertEqual('K', board.getPieceValue(3, 5));
+		
+		board.movePiece(4, 5, 4, 3);
+		assertEqual('k', board.getPieceValue(4, 3));
+	);
+	
+	public testPlainMove : () ==> ()
+	testPlainMove() == (
+		dcl board : Board := new Board();
+		
+		board.addPiece(5, 5, "pawn", "white");
+		assertEqual("plain", board.move("white", 5, 5, 6, 5));
+		assertEqual(' ', board.getPieceValue(5, 5));
+		assertEqual('p', board.getPieceValue(6, 5));
+		
+		assertEqual("plain", board.move("white", 6, 5, 6, 6));
+		assertEqual(' ', board.getPieceValue(6, 5));
+		assertEqual('p', board.getPieceValue(6, 6));
+		
+		assertEqual("plain", board.move("white", 6, 6, 5, 6));
+		assertEqual(' ', board.getPieceValue(6, 6));
+		assertEqual('p', board.getPieceValue(5, 6));
+		
+		assertEqual("plain", board.move("white", 5, 6, 5, 5));
+		assertEqual(' ', board.getPieceValue(5, 6));
+		assertEqual('p', board.getPieceValue(5, 5));
+		
+		board.updatePieces();
+		board.print();
+	);
+	
+	public testCanterMove : () ==> ()
+	testCanterMove() == (
+		dcl board : Board := new Board();
+		
+		board.addPiece(5, 5, "pawn", "white");
+		board.addPiece(6, 5, "knight", "white");
+		board.addPiece(8, 4, "pawn", "white");
+		
+		assertEqual("canter", board.move("white", 5, 5, 7, 5));
+		assertEqual(' ', board.getPieceValue(5, 5));
+		assertEqual('p', board.getPieceValue(7, 5));
+		
+		assertEqual("canter", board.move("white", 6, 5, 8, 5));
+		assertEqual(' ', board.getPieceValue(6, 5));
+		assertEqual('k', board.getPieceValue(8, 5));
+		
+		assertEqual("canter", board.move("white", 8, 4, 8, 6));
+		assertEqual(' ', board.getPieceValue(8, 4));
+		assertEqual('p', board.getPieceValue(8, 6));
+		
+		assertEqual("canter", board.move("white", 8, 6, 8, 4));
+		assertEqual(' ', board.getPieceValue(8, 6));
+		assertEqual('p', board.getPieceValue(8, 4));
+		
+		assertEqual("canter", board.move("white", 8, 5, 6, 5));
+		assertEqual(' ', board.getPieceValue(8, 5));
+		assertEqual('k', board.getPieceValue(6, 5));
+		
+		-- test out of bounds moves here
+		
+		board.updatePieces();
+		board.print();
+	);
+	
+	public testJumpMove : () ==> ()
+	testJumpMove() == (
+		dcl board : Board := new Board();
+		
+		board.addPiece(5, 5, "pawn", "white");
+		board.addPiece(6, 5, "knight", "black");
+		
+		assertEqual("jump", board.move("white", 5, 5, 7, 5));
+		assertEqual(' ', board.getPieceValue(5, 5));
+		assertEqual(' ', board.getPieceValue(6, 5));
+		assertEqual('p', board.getPieceValue(7, 5));
+		
+		board.addPiece(6, 5, "knight", "black");
+		
+		assertEqual("jump", board.move("white", 7, 5, 5, 5));
+		assertEqual(' ', board.getPieceValue(7, 5));
+		assertEqual(' ', board.getPieceValue(6, 5));
+		assertEqual('p', board.getPieceValue(5, 5));
+		
+		board.addPiece(5, 6, "knight", "black");
+		
+		assertEqual("jump", board.move("white", 5, 5, 5, 7));
+		assertEqual(' ', board.getPieceValue(5, 5));
+		assertEqual(' ', board.getPieceValue(5, 6));
+		assertEqual('p', board.getPieceValue(5, 7));
+		
+		board.addPiece(5, 6, "knight", "black");
+		
+		assertEqual("jump", board.move("white", 5, 7, 5, 5));
+		assertEqual(' ', board.getPieceValue(5, 7));
+		assertEqual(' ', board.getPieceValue(5, 6));
+		assertEqual('p', board.getPieceValue(5, 5));
+		
+		-- test out of bound moves here
 		
 		board.updatePieces();
 		board.print();
