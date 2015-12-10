@@ -1,0 +1,116 @@
+class TestGame is subclass of Testalot
+/*
+	Subclass for actually testing a game case
+*/
+
+	operations
+	
+	public test : () ==> ()
+	test() == (
+		testBoard();
+		testPieceAddition();
+		testBoardInit();
+	);
+	
+	public testBoard : () ==> ()
+	testBoard() == (
+		dcl board : Board := new Board();
+		
+		assertEqual('#', board.getElement(0, 0));
+		assertEqual('#', board.getElement(1, 0));
+		assertEqual('#', board.getElement(2, 0));
+		assertEqual('#', board.getElement(0, 1));
+		assertEqual('#', board.getElement(1, 1));
+		assertEqual('#', board.getElement(0, 2));
+		
+		assertEqual('#', board.getElement(9, 0));
+		assertEqual('#', board.getElement(10, 0));
+		assertEqual('#', board.getElement(11, 0));
+		assertEqual('#', board.getElement(10, 1));
+		assertEqual('#', board.getElement(11, 1));
+		assertEqual('#', board.getElement(11, 2));
+		
+		assertEqual('#', board.getElement(0, 15));
+		assertEqual('#', board.getElement(1, 15));
+		assertEqual('#', board.getElement(2, 15));
+		assertEqual('#', board.getElement(0, 14));
+		assertEqual('#', board.getElement(1, 14));
+		assertEqual('#', board.getElement(0, 13));
+		
+		assertEqual('#', board.getElement(9, 15));
+		assertEqual('#', board.getElement(10, 15));
+		assertEqual('#', board.getElement(11, 15));
+		assertEqual('#', board.getElement(10, 14));
+		assertEqual('#', board.getElement(11, 14));
+		assertEqual('#', board.getElement(11, 13));
+		
+		board.print();
+	);
+	
+	public testPieceAddition : () ==> ()
+	testPieceAddition() == (
+		dcl board : Board := new Board();
+		
+		assertEqual(' ', board.getPieceValue(5, 5));
+		board.addPiece(5, 5, "pawn", "white");
+		assertEqual('p', board.getPieceValue(5, 5));
+		
+		assertEqual(' ', board.getPieceValue(5, 10));
+		board.addPiece(5, 10, "pawn", "black");
+		assertEqual('P', board.getPieceValue(5, 10));
+		
+		assertEqual(' ', board.getPieceValue(8, 5));
+		board.addPiece(8, 5, "knight", "white");
+		assertEqual('k', board.getPieceValue(8, 5));
+		
+		assertEqual(' ', board.getPieceValue(8, 10));
+		board.addPiece(8, 10, "knight", "black");
+		assertEqual('K', board.getPieceValue(8, 10));
+		
+		board.updatePieces();
+		board.print();
+	);
+	
+	public testBoardInit : () ==> ()
+	testBoardInit() == (
+		dcl board : Board := new Board();
+		board.init();
+		board.begin();
+		
+		assertEqual('K', board.getPieceValue(2, 5));
+		assertEqual('P', board.getPieceValue(3, 5));
+		assertEqual('P', board.getPieceValue(4, 5));
+		assertEqual('P', board.getPieceValue(5, 5));
+		assertEqual('P', board.getPieceValue(6, 5));
+		assertEqual('P', board.getPieceValue(7, 5));
+		assertEqual('P', board.getPieceValue(8, 5));
+		assertEqual('K', board.getPieceValue(9, 5));
+		
+		assertEqual('K', board.getPieceValue(3, 6));
+		assertEqual('P', board.getPieceValue(4, 6));
+		assertEqual('P', board.getPieceValue(5, 6));
+		assertEqual('P', board.getPieceValue(6, 6));
+		assertEqual('P', board.getPieceValue(7, 6));
+		assertEqual('K', board.getPieceValue(8, 6));
+		
+		assertEqual('k', board.getPieceValue(3, 9));
+		assertEqual('p', board.getPieceValue(4, 9));
+		assertEqual('p', board.getPieceValue(5, 9));
+		assertEqual('p', board.getPieceValue(6, 9));
+		assertEqual('p', board.getPieceValue(7, 9));
+		assertEqual('k', board.getPieceValue(8, 9));
+		
+		assertEqual('k', board.getPieceValue(2, 10));
+		assertEqual('p', board.getPieceValue(3, 10));
+		assertEqual('p', board.getPieceValue(4, 10));
+		assertEqual('p', board.getPieceValue(5, 10));
+		assertEqual('p', board.getPieceValue(6, 10));
+		assertEqual('p', board.getPieceValue(7, 10));
+		assertEqual('p', board.getPieceValue(8, 10));
+		assertEqual('k', board.getPieceValue(9, 10));
+		
+		board.updatePieces();
+		board.print();
+	);
+
+end TestGame
