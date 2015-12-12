@@ -96,7 +96,7 @@ class Board
 						auxLine := auxLine ^ [' '];
 				);
 				board := board ^ [auxLine];
-				auxLine := []; -- reset auxLine for next iteration
+				auxLine := ""; -- reset auxLine for next iteration
 			);
 		);
 		

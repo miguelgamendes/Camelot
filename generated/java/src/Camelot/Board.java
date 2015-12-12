@@ -125,7 +125,7 @@ public class Board {
 
             board = SeqUtil.conc(Utils.copy(board), SeqUtil.seq(auxLine));
 
-            auxLine = SeqUtil.seq();
+            auxLine = "";
         }
     }
 

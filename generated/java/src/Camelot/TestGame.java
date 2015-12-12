@@ -10,6 +10,10 @@ public class TestGame extends Testalot {
     public TestGame() {
     }
 
+    public static void main(String[] args) {
+        new TestGame().test();
+    }
+
     public void test() {
         testBoard();
         testPiece();

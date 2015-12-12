@@ -5,6 +5,11 @@ class TestGame is subclass of Testalot
 
 	operations
 	
+	public static main : () ==> ()
+	main () == (
+		new TestGame().test();
+	);
+	
 	public test : () ==> ()
 	test() == (
 		testBoard();
