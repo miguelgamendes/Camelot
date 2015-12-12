@@ -67,6 +67,7 @@ class Board
 			init();
 		);
 		
+		-- prepares the board structure, marking invalid cells
 		public init : () ==> ()
 		init() == (
 			dcl auxLine : seq of char := [];
@@ -102,47 +103,49 @@ class Board
 		public begin : () ==> ()
 		begin() == (
 			init();
+			pieces := []; -- remove all pieces
 			
 			-- piece placement
 			
 			-- black pieces
 			
 			addPiece(2,5,"knight", "black");
-			addPiece(3,5,"piece", "black");
-			addPiece(4,5,"piece", "black");
-			addPiece(5,5,"piece", "black");
-			addPiece(6,5,"piece", "black");
-			addPiece(7,5,"piece", "black");
-			addPiece(8,5,"piece", "black");
+			addPiece(3,5,"pawn", "black");
+			addPiece(4,5,"pawn", "black");
+			addPiece(5,5,"pawn", "black");
+			addPiece(6,5,"pawn", "black");
+			addPiece(7,5,"pawn", "black");
+			addPiece(8,5,"pawn", "black");
 			addPiece(9,5,"knight", "black");
 			
 			addPiece(3,6,"knight", "black");
-			addPiece(4,6,"piece", "black");
-			addPiece(5,6,"piece", "black");
-			addPiece(6,6,"piece", "black");
-			addPiece(7,6,"piece", "black");
+			addPiece(4,6,"pawn", "black");
+			addPiece(5,6,"pawn", "black");
+			addPiece(6,6,"pawn", "black");
+			addPiece(7,6,"pawn", "black");
 			addPiece(8,6,"knight", "black");
 			
 			-- white pieces
 			
 			addPiece(3,9,"knight","white");
-			addPiece(4,9,"piece","white");
-			addPiece(5,9,"piece","white");
-			addPiece(6,9,"piece","white");
-			addPiece(7,9,"piece","white");
+			addPiece(4,9,"pawn","white");
+			addPiece(5,9,"pawn","white");
+			addPiece(6,9,"pawn","white");
+			addPiece(7,9,"pawn","white");
 			addPiece(8,9,"knight","white");
 			
 			addPiece(2,10,"knight","white");
-			addPiece(3,10,"piece","white");
-			addPiece(4,10,"piece","white");
-			addPiece(5,10,"piece","white");
-			addPiece(6,10,"piece","white");
-			addPiece(7,10,"piece","white");
-			addPiece(8,10,"piece","white");
+			addPiece(3,10,"pawn","white");
+			addPiece(4,10,"pawn","white");
+			addPiece(5,10,"pawn","white");
+			addPiece(6,10,"pawn","white");
+			addPiece(7,10,"pawn","white");
+			addPiece(8,10,"pawn","white");
 			addPiece(9,10,"knight","white");
 			
 			updatePieces();
-		);
+		)
+		post len pieces = 28;
 		
 		public print : () ==> ()
 		print() == (
@@ -156,7 +159,8 @@ class Board
 				IO`print(auxLine);
 				IO`print("\n");
 			)
-		);
+		)
+		pre len board <> 0;
 		
 		public changeElement : int * int * char ==> ()
 		changeElement(x, y, newElem) == (
@@ -193,7 +197,8 @@ class Board
 			auxBoard := auxBoard ^ auxPostBoard;
 			
 			board := auxBoard;
-		);
+		)
+		pre x >= 0 and x <= X and y >= 0 and y <= Y and (newElem = 'p' or newElem = 'P' or newElem = 'k' or newElem = 'K');
 		
 		public getElement : int * int ==> char
 		getElement(x, y) == (
@@ -212,13 +217,29 @@ class Board
 			);
 			
 			return finalElem;
-		);
+		)
+		pre x <= X and y <= Y;
+		
+		public validPieceDestination : int * int ==> bool
+		validPieceDestination(x, y) == (
+			dcl final : bool := true;
+			
+			if getElement(x, y) = '#' then
+				final := false;
+				
+			if getPieceValue(x, y) = 'p' or getPieceValue(x, y) = 'P' or getPieceValue(x, y) = 'k' or getPieceValue(x, y) = 'K' then
+				final := false;
+			
+			return final;
+		)
+		pre x >= 0 and x <= X and y >= 0 and y <= Y;
 		
 		public addPiece : int * int * seq of char * seq of char ==> ()
 		addPiece(x, y, type, color) == (
 			dcl newPiece : Piece := new Piece(x, y, type, color);
 			pieces := pieces ^ [newPiece];
-		);
+		)
+		pre x >= 0 and x <= X and y >= 0 and y <= Y and (type = "knight" or type = "pawn") and (color = "white" or color = "black");
 		
 		public removePiece : int * int ==> ()
 		removePiece(x, y) == (
@@ -235,7 +256,8 @@ class Board
 			);
 			
 			pieces := auxPieces;
-		);
+		)
+		pre x >= 0 and x <= X and y >= 0 and y <= Y;
 		
 		public getPieceValue : int * int ==> char
 		getPieceValue(x, y) == (
@@ -245,7 +267,8 @@ class Board
 			);
 			
 			return ' ';
-		);
+		)
+		pre x >= 0 and x <= X and y >= 0 and y <= Y;
 		
 		public movePiece : int * int * int * int ==> ()
 		movePiece(x1, y1, x2, y2) == (
@@ -253,7 +276,8 @@ class Board
 				if piece.getX() = x1 and piece.getY() = y1 then
 					piece.move(x2, y2);
 			);
-		);
+		)
+		pre x1 >= 0 and x1 <= X and x2 >= 0 and x2 <= X and y1 >= 0 and y1 <= Y and y2 >= 0 and y2 <= Y;
 		
 		public updatePieces : () ==> ()
 		updatePieces() == (
@@ -288,7 +312,8 @@ class Board
 			
 			-- last case scenario, return invalid
 			return -1;
-		);
+		)
+		pre x1 >= 0 and x1 <= X and x2 >= 0 and x2 <= X and y1 >= 0 and y1 <= Y and y2 >= 0 and y2 <= Y and abs(x2 - x1) <= 2 and abs(y2 - y1) <= 2;
 		
 		public move : seq of char * int * int * int * int ==> seq of char
 		move(color, x1, y1, x2, y2) == (

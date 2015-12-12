@@ -6,7 +6,8 @@ class Piece
 	instance variables
 		private x : int := 0;
 		private y : int := 0;
-		public piece : char;
+		private piece : char;
+		inv piece = 'p' or piece = 'P' or piece = 'k' or piece = 'K';
 			
 	operations
 		public Piece : int * int * seq of char * seq of char ==> Piece
@@ -27,7 +28,8 @@ class Piece
 				else
 					piece := 'P';
 			)
-		);
+		)
+		pre (type = "pawn" or type = "knight") and (color = "white" or color = "black");
 		
 		public getX : () ==> int
 		getX() == (

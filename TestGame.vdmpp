@@ -236,8 +236,6 @@ class TestGame is subclass of Testalot
 		assertEqual(' ', board.getPieceValue(8, 5));
 		assertEqual('k', board.getPieceValue(6, 5));
 		
-		-- test out of bounds moves here
-		
 		board.updatePieces();
 		board.print();
 	);
@@ -275,10 +273,28 @@ class TestGame is subclass of Testalot
 		assertEqual(' ', board.getPieceValue(5, 6));
 		assertEqual('p', board.getPieceValue(5, 5));
 		
-		-- test out of bound moves here
-		
 		board.updatePieces();
 		board.print();
+	);
+	
+	-- here are some tests which might break invariants, pre conditions or post conditions. Execute them separetely and may your pc rest in piece.
+
+	public testInvalidPiece : () ==> ()
+	testInvalidPiece() == (
+		dcl piece : Piece := new Piece(5, 5, "pawn", "green");
+		return;
+	);
+	
+	public testInvalidElement : () ==> ()
+	testInvalidElement() == (
+		dcl board : Board := new Board();
+		board.changeElement(5, 5, 'S');
+	);
+	
+	public testInvalidAddPiece : () ==> ()
+	testInvalidAddPiece() == (
+		dcl board : Board := new Board();
+		board.addPiece(-1, 5, "pawn", "white");
 	);
 
 end TestGame
